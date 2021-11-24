@@ -7,6 +7,7 @@
 
 <script>
 import WalletKey from "../components/Header.vue";
+import WalletData from "../components/WalletData.vue";
 
 import * as web3 from "@solana/web3.js";
 /* 
@@ -41,26 +42,14 @@ console.log(web3.clusterApiUrl("mainnet-beta"));
   console.log(account);
 })();
 
-// curl http://api.mainnet-beta.solana.com/ -X POST -H "Content-Type: application/json" -d '
-//   {
-//     "jsonrpc": "2.0",
-//     "id": 1,
-//     "method": "getSignaturesForAddress",
-//     "params": [
-//       "8YmMhex5Vd5JPsyNhCwFPDx5vqeedpCuyFE2W7VtRXQT",
-//       {
-//         "limit": 20
-//       }
-//     ]
-//   }
-// '
+
 // 108367915
 // curl http://api.mainnet-beta.solana.com/ -X POST -H "Content-Type: application/json" -d '
 //   {"jsonrpc": "2.0","id":1,"method":"getBlock","params":[108367915, {"encoding": "json","transactionDetails":"full","rewards":false}]}
 // '
 export default {
   name: "AttractScreen",
-  components: { Header },
+  components: { Header, WalletData },
   data() {
     return {
       columns: ["Hash", "Date", "Status", "Value", "Change"],
@@ -89,6 +78,7 @@ export default {
   },
   methods: {
     onKeyChanged(key) {
+      //   fetch key and emit data to Attract screen
       console.log(key);
     }
   }
@@ -107,18 +97,6 @@ export default {
   padding: 3rem;
   align-items: center;
   flex-direction: column;
-}
-
-.attract-screen_key-input {
-  width: 75%;
-}
-
-.attract-screen_form-group {
-  width: 70%;
-  display: inline-flex;
-  justify-content: space-around;
-  align-items: end;
-  margin: 2rem 1rem;
 }
 
 .attract-screen .bx--label {
