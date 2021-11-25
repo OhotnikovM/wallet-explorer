@@ -1,100 +1,90 @@
 <template>
   <div class="attract-screen">
-    <wallet-key @key-changed="onKeyChanged" />
-    <wallet-data :data="data" :columns="columns" />
+    <wallet-key @key-changed="getWalletData" />
+    <wallet-data
+      @load-more="onLoadMore"
+      :account-data="accountData"
+      :transaction-data="transactionData"
+    />
   </div>
 </template>
 
 <script>
-import WalletKey from "../components/Header.vue";
+import WalletKey from "../components/WalletKey.vue";
 import WalletData from "../components/WalletData.vue";
-
 import * as web3 from "@solana/web3.js";
-/* 
-1. getConfirmedSignaturesForAddress2 (pubKey)
-2. getAccountInfo (pubKey)
-3. getConfirmedTransaction (signature)
-4. getTokenAccountsByOwner
-*/
-console.log(web3.clusterApiUrl("mainnet-beta"));
+import dateFormat, { masks } from "dateformat";
 
-(async () => {
-  // Connect to cluster
-  var connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed"
-  );
+import {
+  fetchParsedTransactions,
+  getAccountInfo
+} from "../helpers/providers.js";
 
-  // Generate a new wallet keypair and airdrop SOL
-  var publicKey = "8YmMhex5Vd5JPsyNhCwFPDx5vqeedpCuyFE2W7VtRXQT";
-  var airdropSignature = await connection.requestAirdrop(
-    publicKey,
-    web3.LAMPORTS_PER_SOL
-  );
-
-  //wait for airdrop confirmation
-  await connection.confirmTransaction(airdropSignature);
-
-  // get account info
-  // account data is bytecode that needs to be deserialized
-  // serialization and deserialization is program specic
-  let account = await connection.getAccountInfo(publicKey);
-  console.log(account);
-})();
-
-
-// 108367915
-// curl http://api.mainnet-beta.solana.com/ -X POST -H "Content-Type: application/json" -d '
-//   {"jsonrpc": "2.0","id":1,"method":"getBlock","params":[108367915, {"encoding": "json","transactionDetails":"full","rewards":false}]}
-// '
 export default {
   name: "AttractScreen",
-  components: { Header, WalletData },
+  components: { WalletKey, WalletData },
   data() {
     return {
-      columns: ["Hash", "Date", "Status", "Value", "Change"],
-      data: [
-        [
-          "Load Balancer 11",
-          "HTTP",
-          "80",
-          "Round Robin",
-          "Maureen’s VM Groups"
-        ],
-        ["Load Balancer 4", "HTTP", "81", "Round Robin", "Maureen’s VM Groups"],
-        ["Load Balancer 2", "HTTP", "82", "Round Robin", "Maureen’s VM Groups"],
-        [
-          "Load Balancer 3",
-          "HTTP",
-          "8080",
-          "Round Robin",
-          "Maureen’s VM Groups"
-        ],
-        ["Load Balancer 23", "HTTP", "1080", "Round Robin", "Max’s VM Groups"],
-        ["Load Balancer 25", "HTTP", "1001", "Round Robin", "Max’s VM Groups"],
-        ["Load Balancer 311", "HTTP", "280", "Round Robin", "John’s VM Groups"]
-      ]
+      accountData: {
+        balance: 0,
+        address: ""
+      },
+      transactionData: [],
+      LAMPORT: 0.000000001,
+      DATE: 1000,
+      signatureLimit: 20,
+      lastSignature: ""
     };
   },
   methods: {
-    onKeyChanged(key) {
-      //   fetch key and emit data to Attract screen
-      console.log(key);
-    }
+    async getWalletData(key) {
+      const pubKey = new web3.PublicKey(key);
+
+      const connection = new web3.Connection(
+        web3.clusterApiUrl("mainnet-beta"),
+        "confirmed"
+      );
+
+      this.accountData = await getAccountInfo(pubKey, connection, this.LAMPORT);
+
+      const confirmedData = await connection.getConfirmedSignaturesForAddress2(
+        pubKey,
+        { limit: this.signatureLimit }
+      );
+
+      const confirmedSignatures = confirmedData.map(i => i.signature);
+      this.lastSignature = confirmedSignatures[confirmedData.length - 1];
+
+      const transactions = await fetchParsedTransactions(
+        connection,
+        confirmedSignatures
+      );
+
+      this.transactionData = Array.from(transactions).map(transaction => {
+        return [
+          transaction[0],
+          dateFormat(transaction[1].blockTime * this.DATE, "mm/dd/yyyy, h:MM"),
+          transaction[1].meta.status.hasOwnProperty('Ok') ? "Success" : "Failed"
+        ];
+      });
+      console.log("data", this.transactionData);
+      console.log("transactions: ", transactions);
+    },
+    onLoadMore() {}
   }
 };
 </script>
 
 <style>
 .attract-screen {
-  width: 70vw;
+  width: 85vw;
   min-height: 100vh;
   background: #262626;
   color: #ffffff;
   border-radius: 15px;
   display: flex;
   margin: 0 auto;
-  padding: 3rem;
+  padding: 2rem 0;
   align-items: center;
   flex-direction: column;
 }
@@ -120,10 +110,22 @@ export default {
 
 .attract-screen .bx--btn--tertiary {
   color: #7c73cb;
+  border-color: #7c73cb;
 }
+
 .attract-screen .bx--btn--tertiary:hover,
 .attract-screen .bx--btn--tertiary:focus {
   background-color: #7c73cb;
   color: #ffffff;
+  border-color: #7c73cb;
+}
+
+.attract-screen .bx--text-input:focus,
+.bx--text-input:active {
+  outline: 2px solid #7c73cb;
+}
+
+.attract-screen .bx--accordion__heading:focus::before {
+  border: 2px solid #7c73cb;
 }
 </style>
