@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 .attract-screen_content {
-  width: 95%;
+  width: 90%;
   background: #ffffff;
 }
 .attract-screen_load_more.cv-button.bx--btn.bx--btn--primary {

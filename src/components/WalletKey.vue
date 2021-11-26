@@ -9,7 +9,7 @@
         label="Account public key"
         placeholder="Enter key here"
       />
-      <cv-button kind="tertiary" @click="$emit('key-changed', accountKey)">Submit</cv-button>
+      <cv-button kind="secondary" @click="$emit('key-changed', accountKey)">Submit</cv-button>
     </div>
   </div>
 </template>

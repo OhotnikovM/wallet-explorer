@@ -62,14 +62,14 @@ export default {
 
 <style>
 .attract-screen {
-  width: 90vw;
+  background: #000000
+    url("https://solana.com/static/d6ab3ce99c22bc21d77d935142b9f8d1/0e783/index_scale_adoption.png");
+  padding: 2rem;
+  width: 100vw;
   min-height: 100vh;
-  background: #262626;
   color: #ffffff;
   border-radius: 15px;
   display: flex;
-  margin: 0 auto;
-  padding: 2rem 0;
   align-items: center;
   flex-direction: column;
 }
@@ -93,16 +93,9 @@ export default {
   margin: 0px;
 }
 
-.attract-screen .bx--btn--tertiary {
-  color: #7c73cb;
+.attract-screen .bx--btn--secondary:focus {
   border-color: #7c73cb;
-}
-
-.attract-screen .bx--btn--tertiary:hover,
-.attract-screen .bx--btn--tertiary:focus {
-  background-color: #7c73cb;
-  color: #ffffff;
-  border-color: #7c73cb;
+  box-shadow: inset 0 0 0 1px #7c73cb, inset 0 0 0 2px #ffffff;
 }
 
 .attract-screen .bx--text-input:focus,
