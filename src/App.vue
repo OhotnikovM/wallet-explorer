@@ -11,9 +11,7 @@ export default Vue.extend({
 </script>
 
 <template>
-  <div id="app">
-    <attract-screen />
-  </div>
+  <attract-screen />
 </template>
 
 <style>
@@ -35,7 +33,7 @@ hr {
   height: 1px;
 }
 
-#app {
+.attract-screen {
   background: #000000
     url("https://solana.com/static/d6ab3ce99c22bc21d77d935142b9f8d1/0e783/index_scale_adoption.png");
   padding: 2rem;
