@@ -14,7 +14,7 @@ export function getActualBalance(accountKeys, meta, pubKey) {
   return { pre, post, delta };
 }
 
-export async function fetchParsedTransactions(
+export async function getParsedTransactions(
   connection,
   transactionSignatures,
   pubKey

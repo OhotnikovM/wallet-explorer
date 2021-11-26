@@ -14,10 +14,7 @@ import WalletKey from "../components/WalletKey.vue";
 import WalletData from "../components/WalletData.vue";
 import * as web3 from "@solana/web3.js";
 
-import {
-  fetchParsedTransactions,
-  getAccountInfo
-} from "../helpers/providers.js";
+import { getParsedTransactions, getAccountInfo } from "../helpers/providers.js";
 
 export default {
   name: "AttractScreen",
@@ -52,7 +49,7 @@ export default {
       const confirmedSignatures = confirmedData.map(i => i.signature);
       this.lastSignature = confirmedSignatures[confirmedData.length - 1];
 
-      this.transactionData = await fetchParsedTransactions(
+      this.transactionData = await getParsedTransactions(
         connection,
         confirmedSignatures,
         pubKey
