@@ -29,7 +29,6 @@ export default {
         address: ""
       },
       transactionData: [],
-      LAMPORT: 0.000000001,
       signatureLimit: 20,
       lastSignature: ""
     };
@@ -43,7 +42,7 @@ export default {
         "confirmed"
       );
 
-      this.accountData = await getAccountInfo(pubKey, connection, this.LAMPORT);
+      this.accountData = await getAccountInfo(pubKey, connection);
 
       const confirmedData = await connection.getConfirmedSignaturesForAddress2(
         pubKey,
@@ -56,10 +55,8 @@ export default {
       this.transactionData = await fetchParsedTransactions(
         connection,
         confirmedSignatures,
-        pubKey,
-        this.LAMPORT
+        pubKey
       );
-
     },
     onLoadMore() {}
   }
