@@ -23,6 +23,7 @@ html {
 
 body {
   height: 100%;
+  background-color: #000000;
 }
 
 hr {

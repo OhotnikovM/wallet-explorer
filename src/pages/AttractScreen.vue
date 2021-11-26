@@ -13,7 +13,6 @@
 import WalletKey from "../components/WalletKey.vue";
 import WalletData from "../components/WalletData.vue";
 import * as web3 from "@solana/web3.js";
-import dateFormat, { masks } from "dateformat";
 
 import {
   fetchParsedTransactions,
@@ -31,7 +30,6 @@ export default {
       },
       transactionData: [],
       LAMPORT: 0.000000001,
-      DATE: 1000,
       signatureLimit: 20,
       lastSignature: ""
     };
@@ -55,20 +53,13 @@ export default {
       const confirmedSignatures = confirmedData.map(i => i.signature);
       this.lastSignature = confirmedSignatures[confirmedData.length - 1];
 
-      const transactions = await fetchParsedTransactions(
+      this.transactionData = await fetchParsedTransactions(
         connection,
-        confirmedSignatures
+        confirmedSignatures,
+        pubKey,
+        this.LAMPORT
       );
 
-      this.transactionData = Array.from(transactions).map(transaction => {
-        return [
-          transaction[0],
-          dateFormat(transaction[1].blockTime * this.DATE, "mm/dd/yyyy, h:MM"),
-          transaction[1].meta.status.hasOwnProperty('Ok') ? "Success" : "Failed"
-        ];
-      });
-      console.log("data", this.transactionData);
-      console.log("transactions: ", transactions);
     },
     onLoadMore() {}
   }
@@ -77,7 +68,7 @@ export default {
 
 <style>
 .attract-screen {
-  width: 85vw;
+  width: 90vw;
   min-height: 100vh;
   background: #262626;
   color: #ffffff;

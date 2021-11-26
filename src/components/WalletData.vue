@@ -38,7 +38,11 @@
         </template>
         <template slot="content">
           <cv-data-table :columns="transactionColumns" :data="transactionData" ref="table"></cv-data-table>
-          <cv-button v-show="!transactionData" @click="$emit('load-more')" class="attract-screen_load_more">
+          <cv-button
+            v-if="transactionData.length"
+            @click="$emit('load-more')"
+            class="attract-screen_load_more"
+          >
             <span v-if="!isLoading">Load more</span>
             <span v-else class="spinner"></span>
           </cv-button>
@@ -59,7 +63,7 @@ export default {
     return {
       isLoading: false,
       accountColumns: ["Address", "Balance (SOL)"],
-      transactionColumns: ["Hash", "Date", "Status", "Value", "Change"]
+      transactionColumns: ["SIGNATURE", "DATE", "STATUS", "BALANCE", "CHANGE"]
     };
   }
 };
@@ -98,7 +102,10 @@ export default {
 .attract-screen_content .row.cv-row.row.bx--row:first-child {
   margin-top: 0.5rem;
 }
-.attract-screen_content ::v-deep .bx--snippet .cv-feedback-button.bx--copy-btn:focus {
+.attract-screen_content
+  ::v-deep
+  .bx--snippet
+  .cv-feedback-button.bx--copy-btn:focus {
   outline: 2px solid #7c73cb;
   outline-offset: -2px;
   outline-color: #7c73cb;
