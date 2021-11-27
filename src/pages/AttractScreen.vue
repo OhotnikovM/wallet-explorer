@@ -12,7 +12,6 @@
 <script>
 import { WalletKey } from "../components/WalletKey";
 import { WalletData } from "../components/WalletData";
-
 import * as web3 from "@solana/web3.js";
 
 import { getParsedTransactions, getAccountInfo } from "../helpers/providers.js";
@@ -33,6 +32,7 @@ export default {
   },
   methods: {
     async getWalletData(key) {
+      if (!key) return;
       const pubKey = new web3.PublicKey(key);
 
       const connection = new web3.Connection(

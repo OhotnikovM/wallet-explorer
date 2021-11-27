@@ -4,12 +4,13 @@
     <hr />
     <div class="attract-screen_form-group">
       <cv-text-input
+        :invalid-message="invalidMessage"
         v-model="accountKey"
         class="attract-screen_key-input"
         label="Account public key"
         placeholder="Enter key here"
       />
-      <cv-button kind="secondary" @click="$emit('key-changed', accountKey)">Submit</cv-button>
+      <cv-button kind="secondary" @click="onKeyChanged">Submit</cv-button>
     </div>
   </div>
 </template>
@@ -18,9 +19,16 @@
 export default {
   name: "WalletKey",
   data() {
-    return { accountKey: "" };
+    return { accountKey: "", invalidMessage: "" };
   },
-  methods: {}
+  methods: {
+    onKeyChanged() {
+      this.invalidMessage = this.accountKey
+        ? ""
+        : "You should enter public key";
+      this.$emit("key-changed", this.accountKey);
+    }
+  }
 };
 </script>
 
@@ -36,6 +44,10 @@ export default {
 
 .attract-screen_key-input {
   width: 75%;
+}
+.attract-screen_key-input ::v-deep .bx--form-requirement {
+  position: absolute;
+  top: 68%;
 }
 
 .attract-screen_form-group {
