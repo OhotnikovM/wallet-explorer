@@ -10,8 +10,9 @@
 </template>
 
 <script>
-import WalletKey from "../components/WalletKey.vue";
-import WalletData from "../components/WalletData.vue";
+import { WalletKey } from "../components/WalletKey";
+import { WalletData } from "../components/WalletData";
+
 import * as web3 from "@solana/web3.js";
 
 import { getParsedTransactions, getAccountInfo } from "../helpers/providers.js";
