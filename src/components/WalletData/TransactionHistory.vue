@@ -7,7 +7,7 @@
       ref="table"
     >
       <template slot="data">
-        <cv-data-table-row v-for="(row, rowIndex) in transactionData" :key="String(rowIndex)">
+        <cv-data-table-row v-for="(row, rowIndex) in transactionsData" :key="String(rowIndex)">
           <cv-data-table-cell>
             <cv-code-snippet>{{ row[0] }}</cv-code-snippet>
           </cv-data-table-cell>
@@ -26,7 +26,7 @@
     </cv-data-table>
 
     <cv-button
-      v-if="transactionData.length"
+      v-if="transactionsData.length"
       @click="$emit('load-more')"
       class="attract-screen_load_more"
     >
@@ -40,7 +40,7 @@
 export default {
   name: "TransactionHistory",
   props: {
-    transactionData: Array,
+    transactionsData: Array,
     isLoading: Boolean
   },
   data() {

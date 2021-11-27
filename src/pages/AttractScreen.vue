@@ -2,9 +2,9 @@
   <div class="attract-screen">
     <wallet-key @key-changed="getWalletData" />
     <wallet-data
-      @load-more="onLoadMore"
+      @load-more="getTransactionsData"
       :account-data="accountData"
-      :transaction-data="transactionData"
+      :transactions-data="transactionsData"
       :is-loading="isLoading"
     />
   </div>
@@ -22,48 +22,59 @@ export default {
   components: { WalletKey, WalletData },
   data() {
     return {
+      pubKey: "",
+      connection: null,
       accountData: {
         balance: 0,
         address: ""
       },
-      transactionData: [],
-      signatureLimit: 20,
+      transactionsData: [],
+      signatureLimit: 15,
       lastSignature: "",
       isLoading: false
     };
   },
   methods: {
-    async getWalletData(key) {
-      if (!key) return;
+    setTransactionsData(data) {
+      this.transactionsData = this.transactionsData.length
+        ? [...this.transactionsData, ...data]
+        : data;
+      this.isLoading = false;
+    },
+    async getTransactionsData() {
       this.isLoading = true;
 
-      const pubKey = new web3.PublicKey(key);
+      const options = {
+        limit: this.signatureLimit
+      };
 
-      const connection = new web3.Connection(
-        web3.clusterApiUrl("mainnet-beta"),
-        "confirmed"
-      );
+      if (this.lastSignature) options.before = this.lastSignature;
 
-      this.accountData = await getAccountInfo(pubKey, connection);
-
-      const confirmedData = await connection.getConfirmedSignaturesForAddress2(
-        pubKey,
-        { limit: this.signatureLimit, }
+      const confirmedData = await this.connection.getConfirmedSignaturesForAddress2(
+        this.pubKey,
+        options
       );
 
       const confirmedSignatures = confirmedData.map(i => i.signature);
       this.lastSignature = confirmedSignatures[confirmedData.length - 1];
 
-      getParsedTransactions(connection, confirmedSignatures, pubKey)
-        .then( data => {
-            this.transactionData = data;
-            this.isLoading = false;
-          }
-        );
+      const transactionsData = await getParsedTransactions(
+        this.connection,
+        confirmedSignatures,
+        this.pubKey
+      );
+      this.setTransactionsData(transactionsData);
     },
-    onLoadMore() {
-      console.log("load more");
-      this.isLoading = true;
+    async getWalletData(key) {
+      if (!key) return;
+      this.pubKey = new web3.PublicKey(key);
+      this.connection = new web3.Connection(
+        web3.clusterApiUrl("mainnet-beta"),
+        "confirmed"
+      );
+
+      this.accountData = await getAccountInfo(this.pubKey, this.connection);
+      await this.getTransactionsData();
     }
   }
 };
