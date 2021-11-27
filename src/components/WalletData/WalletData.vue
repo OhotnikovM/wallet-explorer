@@ -14,7 +14,7 @@
           <h5>Transaction History</h5>
         </template>
         <template slot="content">
-          <transaction-history @load-more="$emit('load-more')" :transaction-data="transactionData" />
+          <transaction-history @load-more="$emit('load-more')" :transaction-data="transactionData" :is-loading="isLoading" />
         </template>
       </cv-accordion-item>
     </cv-accordion>
