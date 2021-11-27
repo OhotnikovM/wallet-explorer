@@ -5,6 +5,7 @@
       @load-more="onLoadMore"
       :account-data="accountData"
       :transaction-data="transactionData"
+      :is-loading="isLoading"
     />
   </div>
 </template>
@@ -27,12 +28,15 @@ export default {
       },
       transactionData: [],
       signatureLimit: 20,
-      lastSignature: ""
+      lastSignature: "",
+      isLoading: false
     };
   },
   methods: {
     async getWalletData(key) {
       if (!key) return;
+      this.isLoading = true;
+
       const pubKey = new web3.PublicKey(key);
 
       const connection = new web3.Connection(
@@ -44,19 +48,23 @@ export default {
 
       const confirmedData = await connection.getConfirmedSignaturesForAddress2(
         pubKey,
-        { limit: this.signatureLimit }
+        { limit: this.signatureLimit, }
       );
 
       const confirmedSignatures = confirmedData.map(i => i.signature);
       this.lastSignature = confirmedSignatures[confirmedData.length - 1];
 
-      this.transactionData = await getParsedTransactions(
-        connection,
-        confirmedSignatures,
-        pubKey
-      );
+      getParsedTransactions(connection, confirmedSignatures, pubKey)
+        .then( data => {
+            this.transactionData = data;
+            this.isLoading = false;
+          }
+        );
     },
-    onLoadMore() {}
+    onLoadMore() {
+      console.log("load more");
+      this.isLoading = true;
+    }
   }
 };
 </script>

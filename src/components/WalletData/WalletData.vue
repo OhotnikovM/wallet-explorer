@@ -14,7 +14,13 @@
           <h5>Transaction History</h5>
         </template>
         <template slot="content">
-          <transaction-history @load-more="$emit('load-more')" :transaction-data="transactionData" :is-loading="isLoading" />
+          <transaction-history
+            v-if="transactionData"
+            @load-more="$emit('load-more')"
+            :transaction-data="transactionData"
+            :is-loading="isLoading"
+          />
+          <cv-inline-loading v-if="isLoading && !transactionData.length" :state="'loading'" />
         </template>
       </cv-accordion-item>
     </cv-accordion>
@@ -30,12 +36,8 @@ export default {
   components: { AccountOverview, TransactionHistory },
   props: {
     accountData: Object,
-    transactionData: Array
-  },
-  data() {
-    return {
-      isLoading: false
-    };
+    transactionData: Array,
+    isLoading: Boolean
   }
 };
 </script>

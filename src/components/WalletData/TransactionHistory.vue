@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <cv-data-table :columns="transactionColumns" :data="transactionData" ref="table"></cv-data-table> -->
     <cv-data-table
       :columns="transactionColumns"
       :pagination="false"
@@ -79,7 +78,7 @@ export default {
 .red {
   color: #ff0000;
 }
- ::v-deep .bx--data-table th:last-of-type {
+::v-deep .bx--data-table th:last-of-type {
   display: none;
 }
 </style>
