@@ -9,7 +9,7 @@
           <account-overview :account-data="accountData" />
         </template>
       </cv-accordion-item>
-      <cv-accordion-item>
+      <cv-accordion-item class="attract-screen_transaction_history">
         <template slot="title">
           <h5>Transaction History</h5>
         </template>

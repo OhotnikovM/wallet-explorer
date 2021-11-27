@@ -19,7 +19,7 @@
         </div>
       </cv-column>
       <cv-column :sm="3">
-        <div class="cv-grid-story__preview-col balance">{{ accountData.balance }} (SOL)</div>
+        <div class="cv-grid-story__preview-col balance">◎{{ accountData.balance }} (SOL)</div>
       </cv-column>
     </cv-row>
   </cv-grid>

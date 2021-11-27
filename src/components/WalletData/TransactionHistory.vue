@@ -8,18 +8,16 @@
       ref="table"
     >
       <template slot="data">
-        <cv-data-table-row
-          v-for="(row, rowIndex) in transactionData"
-          :key="`${rowIndex}`"
-          :value="`${rowIndex}`"
-        >
+        <cv-data-table-row v-for="(row, rowIndex) in transactionData" :key="String(rowIndex)">
           <cv-data-table-cell>
-            <input :value="row[0]" style="border: none; background: none; width: 100%;" />
+            <cv-code-snippet>{{ row[0] }}</cv-code-snippet>
           </cv-data-table-cell>
           <cv-data-table-cell>{{ row[1] }}</cv-data-table-cell>
-          <cv-data-table-cell>{{ row[2] }}</cv-data-table-cell>
           <cv-data-table-cell>
-            <a href="http://vue.carbondesignsystem.com">{{ row[3] }}</a>
+            <span :class="row[2].includes('Success') ? 'green' : 'red'">{{ row[2] }}</span>
+          </cv-data-table-cell>
+          <cv-data-table-cell>
+            <span>◎{{ row[3] }}</span>
           </cv-data-table-cell>
           <cv-data-table-cell>
             <cv-tag :kind="row[4] > 0 ? 'green' : 'red'" :label="row[4] | addSign" />
@@ -48,7 +46,7 @@ export default {
   },
   data() {
     return {
-      transactionColumns: ["SIGNATURE", "DATE", "STATUS", "BALANCE", "CHANGE"]
+      transactionColumns: ["Signature", "Date", "Status", "Balance", "Change"]
     };
   },
   filters: {
@@ -73,5 +71,15 @@ export default {
 .attract-screen_load_more.cv-button.bx--btn--primary:focus {
   border-color: #7c73cb;
   box-shadow: inset 0 0 0 1px #7c73cb, inset 0 0 0 2px #ffffff;
+}
+
+.green {
+  color: #26e97e;
+}
+.red {
+  color: #ff0000;
+}
+ ::v-deep .bx--data-table th:last-of-type {
+  display: none;
 }
 </style>
